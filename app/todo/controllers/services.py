@@ -8,4 +8,4 @@ def find_user(email):
         )
         return user_obj
     except Exception as error:
-        print("message:", )
+        print("error:", str(error))
