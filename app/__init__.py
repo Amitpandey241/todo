@@ -32,6 +32,7 @@ from app.todo.models import User, Tasks
 
 # Import and register blueprints
 from app.todo.controllers.views import todo_blueprint
+
 app.register_blueprint(todo_blueprint)
 
 # Export `app` and `db` for external use
