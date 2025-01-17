@@ -22,7 +22,17 @@ class HealthCheck(Resource):
 
 
 class UserRegister(Resource):
-    """This is to create users"""
+    """
+        Handles user registration by creating a new user account.
+
+        Args:
+        email (str): The email address of the user obtained from the request body.
+        password (str): The password of the user obtained from the request body.
+
+        Returns:
+        Response: JSON response with a success message if the user account is created successfully.
+                If the email validation fails or any exception occurs, a JSON response with an error message is returned.
+    """
 
     def post(self):
         try:
@@ -45,7 +55,18 @@ class UserRegister(Resource):
 
 
 class Login(Resource):
-    """Login Api"""
+    """
+        Handles user login and provides access and refresh tokens upon successful authentication.
+
+        Args:
+            email (str): The email address provided by the user in the request body.
+            password (str): The password provided by the user in the request body.
+
+        Returns:
+            Response:
+                - JSON response with `access-token` and `refresh-token` if login is successful.
+                - JSON response with an error message if the email validation or password validation fails.
+    """
 
     def post(self):
         try:
@@ -67,10 +88,23 @@ class Login(Resource):
 
 
 class ListTask(Resource):
-    """List all the task of a users"""
+    """
+        Lists all tasks associated with a specific user.
+
+        Args:
+            user_id (int): The ID of the user whose tasks need to be fetched.
+
+        Returns:
+            Response:
+                - 200: A JSON object containing a list of tasks serialized using `TaskSchema`.
+                - 401: If the JWT token is invalid or the email is not found.
+                - 404: If the user with the specified `user_id` does not exist.
+                - 500: If there is an internal server error or a serialization issue.
+    """
 
     @jwt_required()
     def get(self, user_id):
+
         try:
             email = get_jwt_identity()
             validation = FieldValidations()
@@ -103,6 +137,22 @@ class ListTask(Resource):
 
 
 class CreateTask(Resource):
+    """
+        Creates a new task for a specific user.
+
+        Args:
+            user_id (int): The ID of the user for whom the task is being created.
+
+        Returns:
+            Response:
+                - 201: A JSON object containing a success message and the details of the created task.
+                - 400: If the task title is missing or the due date format is invalid.
+                - 404: If the user with the specified `user_id` is not found.
+                - 500: If there is a serialization error or other internal server issue.
+                - 401: If the token is invalid.
+    """
+
+
     @jwt_required()
     def post(self, user_id):
         validation = FieldValidations()
@@ -157,7 +207,20 @@ class CreateTask(Resource):
 
 
 class UpdateTask(Resource):
+    """
+        Updates the details of a specific task.
 
+        Args:
+            task_id (int): The ID of the task to be updated.
+
+        Returns:
+            Response:
+                - 200: A JSON object containing a success message and the updated task details.
+                - 400: If any input field (e.g., `is_completed` or `due_date`) contains invalid data.
+                - 404: If the task with the specified `task_id` is not found.
+                - 403: If the token is invalid.
+                - 500: If there is a serialization error or other internal server issue.
+    """
     @jwt_required()
     def put(self, task_id):
         validation = FieldValidations()
@@ -216,6 +279,20 @@ class UpdateTask(Resource):
 
 
 class DeleteTask(Resource):
+    """
+        Deletes a specific task for a given user.
+
+        Args:
+            user_id (int): The ID of the user to whom the task belongs.
+            task_id (int): The ID of the task to be deleted.
+
+        Returns:
+            Response:
+                - 200: A JSON object with a success message if the task is successfully deleted.
+                - 401: If the JWT token is invalid or the email is not found.
+                - 404: If the user or task is not found or the task does not belong to the user.
+                - 500: If there is an internal server error.
+    """
     @jwt_required()
     def delete(self, user_id, task_id):
         try:
