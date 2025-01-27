@@ -1,5 +1,5 @@
 import pytest
-from app import app as flask_app, db  # Import your Flask app and database instance
+from app import app as flask_app, db 
 from app.todo.models import User, Tasks
 
 @pytest.fixture
